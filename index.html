@@ -8,28 +8,15 @@
     <title>Library 7a</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { 
-            --bg: #000000; 
-            --card: #1C1C1E; 
-            --climb: #BF5AF2; /* Violet */
-            --flex: #34C759;  /* Vert Émeraude */
-            --jump: #0A84FF;  /* Bleu */
-        }
+        :root { --bg: #000000; --card: #1C1C1E; --climb: #BF5AF2; --flex: #34C759; --jump: #0A84FF; }
         body { background-color: var(--bg); color: white; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; padding-top: env(safe-area-inset-top); }
-        
         .tab-btn { transition: all 0.3s; border-bottom: 2px solid transparent; opacity: 0.3; }
         .tab-btn.active { opacity: 1; border-color: currentColor; transform: scale(1.05); }
-
-        .exercise-card { background: var(--card); border: 0.5px solid #2C2C2E; border-radius: 18px; transition: transform 0.2s active; }
-        .exercise-card:active { transform: scale(0.96); background: #2C2C2E; }
-
-        .notice-box { background: rgba(255, 255, 255, 0.03); border-radius: 14px; padding: 12px; border: 0.5px dashed rgba(255,255,255,0.1); }
-
+        .exercise-card { background: var(--card); border: 0.5px solid #2C2C2E; border-radius: 18px; }
         #modal { backdrop-filter: blur(25px); transition: all 0.4s ease-in-out; }
         .modal-content { transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-open .modal-content { transform: translateY(0); }
-        
-        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        input, textarea { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; padding: 12px; width: 100%; font-size: 14px; }
     </style>
 </head>
 <body class="overflow-hidden">
@@ -43,103 +30,139 @@
         </div>
     </header>
 
-    <main id="content" class="px-5 pt-4 h-[calc(100vh-140px)] overflow-y-auto pb-24">
+    <main id="content" class="px-5 pt-4 h-[calc(100vh-140px)] overflow-y-auto pb-32">
         </main>
+
+    <button onclick="toggleAddForm()" class="fixed bottom-8 right-6 w-14 h-14 bg-blue-600 rounded-full shadow-2xl flex items-center justify-center z-40 text-2xl font-bold">+</button>
 
     <div id="modal" class="fixed inset-0 z-50 hidden flex items-end">
         <div onclick="closeModal()" class="absolute inset-0 bg-black/70"></div>
-        <div class="modal-content w-full bg-[#1C1C1E] rounded-t-[32px] p-8 border-t border-white/10 safe-bottom">
+        <div class="modal-content w-full bg-[#1C1C1E] rounded-t-[32px] p-8 border-t border-white/10 max-h-[90vh] overflow-y-auto">
             <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6"></div>
             <div id="modal-body"></div>
-            <button onclick="closeModal()" class="w-full mt-8 py-4 bg-white/10 rounded-2xl font-bold uppercase text-[10px] tracking-widest">Fermer</button>
+            <button onclick="closeModal()" class="w-full mt-6 py-4 bg-white/10 rounded-2xl font-bold uppercase text-[10px] tracking-widest mb-6">Fermer</button>
         </div>
     </div>
 
     <script>
-        const notices = {
-            climb: {
-                when: "Avant séance (Échauffement) ou jours de repos (Doigts).",
-                avoid: "Ne pas faire le Mini-Crux juste avant un projet maximal."
-            },
-            flex: {
-                when: "Soir au calme (Récup) ou micro-pauses au bureau.",
-                avoid: "Éviter les étirements longs (>30s) juste avant un match de volley."
-            },
-            jump: {
-                when: "3x par semaine. Idéalement les jours sans volley.",
-                avoid: "Le jour d'un match important (fatigue nerveuse)."
-            }
-        };
-
-        const exercises = {
+        let currentTab = 'climb';
+        const defaultExercises = {
             climb: [
-                { name: "Mini Crux (No-Hang)", detail: "Tirage à une main sur réglette 20mm. Épaule verrouillée, buste fier.", routine: "5 séries de 7s (90% effort) / main.", note: "Le secret pour passer du 6c au 7a.", color: "var(--climb)" },
-                { name: "Hangboard (Soft)", detail: "Suspensions bras tendus. Focus sur la sensation de poulie.", routine: "3-5 suspensions de 10s.", note: "Activation nerveuse avant grimpe.", color: "var(--climb)" },
-                { name: "Tractions Lestées", detail: "Haltère ou disque. Mouvement strict sans balancement.", routine: "4 séries de 5 reps.", note: "Puissance de tirage brute.", color: "var(--climb)" }
+                { name: "Mini Crux (No-Hang)", detail: "Tirage à une main sur réglette 20mm. Épaule verrouillée.", routine: "5 séries de 7s (90% effort) / main.", note: "Le secret du 7a.", color: "var(--climb)" },
+                { name: "Scapular Pull-ups", detail: "Suspendu, monte et descends uniquement via les omoplates sans plier les bras.", routine: "3 séries de 12 reps.", note: "Protège tes épaules pour les jetés.", color: "var(--climb)" },
+                { name: "Lock-off Training", detail: "Bloque à 90° sur une prise de ton choix.", routine: "4 séries de 8s par bras.", note: "Indispensable pour clipper en zone difficile.", color: "var(--climb)" },
+                { name: "Finger Curls", detail: "Haltère de 5kg. Enroule tes doigts de la paume vers le bout des doigts.", routine: "3 séries de 15 reps.", note: "Renforce les tendons profonds.", color: "var(--climb)" }
             ],
             flex: [
-                { name: "Couch Stretch", detail: "Genou contre mur, redresse le buste. Contracte la fesse.", routine: "2 min par jambe.", note: "Le 'tueur' de douleur de genou.", color: "var(--flex)" },
-                { name: "La Grenouille", detail: "Hanches ouvertes, bascule vers l'arrière.", routine: "3 minutes au calme.", note: "Pour les carres internes hautes.", color: "var(--flex)" },
-                { name: "Le Pigeon", detail: "Une jambe pliée devant. Garde le bassin face au sol.", routine: "2 min par jambe.", note: "Récupération fessiers post-volley.", color: "var(--flex)" },
-                { name: "Grand Pectoral", detail: "Avant-bras contre porte. Ouvre la cage thoracique.", routine: "1 min / côté.", note: "Posture anti-bureau.", color: "var(--flex)" }
+                { name: "Couch Stretch", detail: "Genou contre mur, redresse le buste.", routine: "2 min par jambe.", note: "Anti-douleur genou.", color: "var(--flex)" },
+                { name: "La Grenouille", detail: "Hanches ouvertes, bascule vers l'arrière.", routine: "3 minutes.", note: "Pour les pieds hauts.", color: "var(--flex)" }
             ],
             jump: [
-                { name: "Squat Goblet Flash", detail: "Poids contre cœur. Descente 3s, montée 0.5s.", routine: "4 séries de 10 reps.", note: "Vise l'explosion maximale.", color: "var(--jump)" },
-                { name: "Fentes Bulgares", detail: "Pied arrière surélevé. Focus sur la propulsion.", routine: "3 séries de 8 reps / jambe.", note: "Force unilatérale cruciale.", color: "var(--jump)" },
-                { name: "La Chaise (Isométrie)", detail: "Dos au mur, angle 90°. Bloque tout.", routine: "3 séries de 45s.", note: "À faire avant CHAQUE match.", color: "var(--jump)" },
-                { name: "Extensions Mollets", detail: "Sur une jambe avec poids. Monte au max.", routine: "4 séries de 15 reps.", note: "L'effet ressort final.", color: "var(--jump)" }
+                { name: "Squat Goblet Flash", detail: "Poids contre cœur. Descente lente, montée explosive.", routine: "4 séries de 10 reps.", note: "Focus puissance brute.", color: "var(--jump)" },
+                { name: "La Chaise (Isométrie)", detail: "Dos au mur, angle 90°.", routine: "3 séries de 45s.", note: "À faire avant le volley.", color: "var(--jump)" }
             ]
         };
 
+        const notices = {
+            climb: { when: "Échauffement ou repos.", avoid: "Avant un projet max." },
+            flex: { when: "Soir (Récup).", avoid: "Juste avant le volley." },
+            jump: { when: "Jours sans volley.", avoid: "Le jour du match." }
+        };
+
+        let data = JSON.parse(localStorage.getItem('lib7a_v1')) || defaultExercises;
+
         function switchTab(tabId) {
+            currentTab = tabId;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
-            
+            render();
+        }
+
+        function render() {
             const container = document.getElementById('content');
-            const notice = notices[tabId];
-            
+            const n = notices[currentTab];
+            const activeColor = `var(--${currentTab})`;
+
             let html = `
-                <div class="notice-box mb-6 space-y-2">
-                    <p class="text-[9px] text-green-400 font-bold uppercase tracking-tighter">✅ Quand : <span class="text-white italic lowercase font-normal">${notice.when}</span></p>
-                    <p class="text-[9px] text-red-400 font-bold uppercase tracking-tighter">❌ Éviter : <span class="text-white italic lowercase font-normal">${notice.avoid}</span></p>
+                <div class="flex gap-2 mb-6">
+                    <button onclick="openNotice('when')" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest" style="color:${activeColor}">Quand ?</button>
+                    <button onclick="openNotice('avoid')" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-red-500">Éviter</button>
                 </div>
             `;
 
-            html += exercises[tabId].map((ex, i) => `
-                <div onclick="openEx('${tabId}', ${i})" class="exercise-card p-5 mb-3 flex justify-between items-center group">
-                    <span class="font-black text-xs uppercase tracking-tight" style="color: ${ex.color}">${ex.name}</span>
-                    <div class="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-[10px] opacity-30">→</div>
+            html += data[currentTab].map((ex, i) => `
+                <div class="exercise-card p-5 mb-3 flex justify-between items-center">
+                    <span onclick="openEx(${i})" class="font-black text-xs uppercase tracking-tight flex-1" style="color: ${activeColor}">${ex.name}</span>
+                    <button onclick="deleteEx(${i})" class="text-gray-600 text-xs ml-4">✕</button>
                 </div>
             `).join('');
 
             container.innerHTML = html;
         }
 
-        function openEx(tab, index) {
-            const ex = exercises[tab][index];
+        function openNotice(type) {
+            const n = notices[currentTab];
+            const content = type === 'when' ? {t: "QUAND PRATIQUER", d: n.when, c: `var(--${currentTab})`} : {t: "À ÉVITER", d: n.avoid, c: "#EF4444"};
+            document.getElementById('modal-body').innerHTML = `<h2 class="text-xl font-black italic mb-4" style="color:${content.c}">${content.t}</h2><p class="text-gray-400 text-sm">${content.d}</p>`;
+            showModal();
+        }
+
+        function openEx(index) {
+            const ex = data[currentTab][index];
             document.getElementById('modal-body').innerHTML = `
                 <h2 class="text-xl font-black uppercase italic mb-1" style="color: ${ex.color}">${ex.name}</h2>
-                <div class="w-10 h-1 mb-4" style="background-color: ${ex.color}"></div>
-                <p class="text-gray-400 text-[11px] leading-relaxed mb-6">${ex.detail}</p>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                        <p class="text-[8px] font-black text-gray-500 uppercase mb-1">Objectif</p>
-                        <p class="text-[11px] font-bold">${ex.routine}</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                        <p class="text-[8px] font-black text-gray-500 uppercase mb-1">Note Coach</p>
-                        <p class="text-[11px] font-bold italic">${ex.note}</p>
+                <div class="w-10 h-1 mb-6" style="background-color: ${ex.color}"></div>
+                <div class="space-y-6">
+                    <div><p class="text-[8px] font-black text-gray-500 uppercase mb-2">Description</p><p class="text-xs leading-relaxed text-gray-300">${ex.detail}</p></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5"><p class="text-[8px] font-black text-gray-500 uppercase mb-1">Objectif</p><p class="text-[11px] font-bold">${ex.routine}</p></div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5"><p class="text-[8px] font-black text-gray-500 uppercase mb-1">Note Coach</p><p class="text-[11px] font-bold italic">${ex.note}</p></div>
                     </div>
                 </div>
             `;
-            document.getElementById('modal').classList.remove('hidden');
-            setTimeout(() => document.body.classList.add('modal-open'), 10);
+            showModal();
         }
 
-        function closeModal() {
-            document.body.classList.remove('modal-open');
-            setTimeout(() => document.getElementById('modal').classList.add('hidden'), 400);
+        function toggleAddForm() {
+            const color = `var(--${currentTab})`;
+            document.getElementById('modal-body').innerHTML = `
+                <h2 class="text-xl font-black uppercase italic mb-6">Ajouter - ${currentTab}</h2>
+                <div class="space-y-4">
+                    <input id="new-name" placeholder="Nom de l'exercice">
+                    <textarea id="new-detail" placeholder="Description technique" rows="3"></textarea>
+                    <input id="new-routine" placeholder="Objectif (Reps / Séries)">
+                    <input id="new-note" placeholder="Note Coach">
+                    <button onclick="saveNewEx()" class="w-full py-4 rounded-2xl font-black text-xs uppercase" style="background:${color}; color:black">Enregistrer</button>
+                </div>
+            `;
+            showModal();
         }
+
+        function saveNewEx() {
+            const ex = {
+                name: document.getElementById('new-name').value,
+                detail: document.getElementById('new-detail').value,
+                routine: document.getElementById('new-routine').value,
+                note: document.getElementById('new-note').value,
+                color: `var(--${currentTab})`
+            };
+            if(!ex.name) return;
+            data[currentTab].push(ex);
+            localStorage.setItem('lib7a_v1', JSON.stringify(data));
+            closeModal();
+            render();
+        }
+
+        function deleteEx(i) {
+            if(confirm("Supprimer cet exercice ?")) {
+                data[currentTab].splice(i, 1);
+                localStorage.setItem('lib7a_v1', JSON.stringify(data));
+                render();
+            }
+        }
+
+        function showModal() { document.getElementById('modal').classList.remove('hidden'); setTimeout(() => document.body.classList.add('modal-open'), 10); }
+        function closeModal() { document.body.classList.remove('modal-open'); setTimeout(() => document.getElementById('modal').classList.add('hidden'), 400); }
 
         switchTab('climb');
     </script>
