@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Training 7a</title>
+    <title>Library 7a</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #000000; --card: #1C1C1E; --climb: #BF5AF2; --flex: #34C759; --jump: #0A84FF; }
@@ -22,7 +22,7 @@
 <body class="overflow-hidden">
 
     <header class="p-6 pb-2 sticky top-0 bg-black/80 backdrop-blur-md z-40">
-        <h1 class="text-2xl font-black uppercase tracking-tighter italic mb-4">Training <span class="text-blue-500">7a</span></h1>
+        <h1 class="text-2xl font-black uppercase tracking-tighter italic mb-4">Library <span class="text-blue-500">7a</span></h1>
         <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest px-2">
             <button onclick="switchTab('climb')" id="tab-climb" class="tab-btn active text-purple-400">Escalade</button>
             <button onclick="switchTab('flex')" id="tab-flex" class="tab-btn text-green-500">Souplesse</button>
@@ -52,30 +52,30 @@
                 { name: "Mini Crux (No-Hang)", detail: "Tirage à une main sur réglette 20mm au sol. Épaule engagée.", routine: "5 séries de 7s (90% effort) / main.", note: "Le pilier de ta force de doigt.", color: "var(--climb)" },
                 { name: "Scapular Pull-ups", detail: "Suspendu, monte le buste uniquement via les omoplates. Bras tendus.", routine: "3 séries de 12 reps.", note: "Stabilité d'épaule cruciale.", color: "var(--climb)" },
                 { name: "Lock-off Training", detail: "Bloque à 90° sur une prise franche.", routine: "4 séries de 8s par bras. Repos 2'.", note: "Pour clipper sans trembler.", color: "var(--climb)" },
-                { name: "Curls", detail: "Haltère de 5kg. Descend jusqu'à bras tendu puis remonte au plus haut. Alterne prise marteau et paume vers le haut", routine: "4 séries de 25 reps.", note: "Renforce les biceps et brachial.", color: "var(--climb)" },
+                { name: "Finger Curls", detail: "Haltère de 5kg. Enroule tes doigts de la paume vers le bout des phalanges.", routine: "3 séries de 15 reps.", note: "Renforce les tendons profonds sans trauma.", color: "var(--climb)" },
                 { name: "Hangboard (Fin/Résistance)", detail: "Travail de densité sur 20mm ou lesté si trop facile.", routine: "6 séries de 7s. Repos 2'.", note: "Pour finir d'épuiser les fibres nerveuses.", color: "var(--climb)" }
             ],
             flex: [
-                { name: "Couch Stretch", detail: "1 genou au sol, tibia contre mur/canapé, l'autre plié devant a 90°, redresse le buste au max.", routine: "2 min par jambe.", note: "Le meilleur anti-douleur genou.", color: "var(--flex)" },
+                { name: "Couch Stretch", detail: "Genou contre mur/canapé, redresse le buste au max.", routine: "2 min par jambe.", note: "Le meilleur anti-douleur genou.", color: "var(--flex)" },
                 { name: "La Grenouille", detail: "Genoux écartés au sol, pieds vers l'extérieur. Bascule bassin vers l'arrière.", routine: "3 minutes.", note: "Ouverture de hanche pour le 7a.", color: "var(--flex)" },
-                { name: "Le Pigeon", detail: "Jambe avant pliée à 90° en travers du corps, jambe arrière tendue.", routine: "2 min par jambe.", note: "Récupération fessiers post-volley.", color: "var(--flex)" },
+                { name: "Le Pigeon", detail: "Jambe avant pliée à 90°, arrière tendue.", routine: "2 min par jambe.", note: "Récupération fessiers post-volley.", color: "var(--flex)" },
                 { name: "Grand Pectoral", detail: "Bras contre cadre de porte, pivote le buste à l'opposé.", routine: "1 min par côté.", note: "Ouvre la cage thoracique (posture bureau).", color: "var(--flex)" },
-                { name: "Étirement Avant-Bras", detail: "À genoux, mains au sol, doigts vers les genoux.", routine: "1 min.", note: "Prévention des tendinites coudes.", color: "var(--flex)" },
+                { name: "Chien Tête en Bas", detail: "V inversé, pousse fort dans les mains, talons vers le sol.", routine: "1 minute.", note: "Étire toute la chaîne postérieure.", color: "var(--flex)" },
+                { name: "Étirement Avant-Bras", detail: "À genoux, mains au sol, doigts vers les genoux. Bascule arrière.", routine: "1 min.", note: "Prévention des tendinites coudes.", color: "var(--flex)" },
                 { name: "Chat-Vache", detail: "À quatre pattes, alterne dos rond et dos creux doucement.", routine: "15 répétitions lentes.", note: "Mobilise la colonne après Liebherr.", color: "var(--flex)" }
             ],
             jump: [
                 { name: "La Chaise (Isométrie)", detail: "Dos au mur, angle 90°. Hyper stable.", routine: "3 séries de 45s.", note: "À faire 30min AVANT le volley (analgésique).", color: "var(--jump)" },
-                { name: "Squat Goblet Flash", detail: "Disque 10kg contre la poitrine. Descente squat lente, montée explosive.", routine: "4 séries de 10 reps.", note: "Vitesse de remontée maximale.", color: "var(--jump)" },
-                { name: "Fentes Bulgares", detail: "Un pied derrière sur chaise. Disque 10kg.", routine: "3 séries de 8 reps / jambe.", note: "Puissance de saut unilatérale.", color: "var(--jump)" },
-                { name: "Single-Leg RDL", detail: "Bascule du buste vers l'avant sur une jambe, dos plat. Poids en main.", routine: "3 séries de 12 reps / jambe.", note: "Force des ischios (propulsion).", color: "var(--jump)" },
-                { name: "Extensions Mollets", detail: "Sur une jambe avec 10kg. Monte au maximum sur la pointe.", routine: "4 séries de 15 reps.", note: "L'effet ressort final.", color: "var(--jump)" }
-                { name: "Single-Leg Glute Bridge", detail: "Sur le dos, une jambe plié l'autre tendu en l'air, levé les fesses en l'air", routine: "4 séries de 15 reps.", note: "L'effet ressort final.", color: "var(--jump)" }
+                { name: "Squat Goblet Flash", detail: "Disque 10kg contre la poitrine. Descente lente, montée explosive.", routine: "4 séries de 10 reps.", note: "Vitesse de remontée maximale.", color: "var(--jump)" },
+                { name: "Fentes Bulgares", detail: "Un pied derrière sur chaise. Haltère 5kg + Disque 10kg.", routine: "3 séries de 8 reps / jambe.", note: "Puissance de saut unilatérale.", color: "var(--jump)" },
+                { name: "Single-Leg RDL", detail: "Bascule buste avant sur une jambe, dos plat. Poids en main.", routine: "3 séries de 12 reps / jambe.", note: "Force des ischios (propulsion).", color: "var(--jump)" },
+                { name: "Extensions Mollets", detail: "Sur une jambe avec 15kg. Monte au maximum sur la pointe.", routine: "4 séries de 15 reps.", note: "L'effet ressort final.", color: "var(--jump)" }
             ]
         };
 
         const notices = {
-            climb: { when: "Séance escalade ou micro-session doigts.", avoid: "Avant un projet difficile." },
-            flex: { when: "Soirée au calme (Système nerveux relax).", avoid: "Juste avant le match de volley ou une grosse session de grimpe" },
+            climb: { when: "Séance escalade ou micro-session doigts.", avoid: "Avant un projet à vue difficile." },
+            flex: { when: "Soirée au calme (Système nerveux relax).", avoid: "Juste avant le match de volley." },
             jump: { when: "3x par semaine (Appartement).", avoid: "Le jour d'un match important." }
         };
 
